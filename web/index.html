@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/web/favicon.svg">
+<title>南美圖資 · BIM 模型檢視器</title>
+<link rel="stylesheet" href="/forge-viewer/style.min.css">
+<link rel="stylesheet" href="/web/style.css">
+<script defer src="/forge-viewer/viewer3D.min.js"></script>
+<script defer src="/web/app.js"></script>
+</head>
+<body>
+<header><div class="brand"><span class="mark">N</span><div>南美圖資 <span class="divider">/</span> <strong>BIM 模型工作台</strong></div></div><span class="local"><i></i> 本機離線模式</span></header>
+<div class="workspace">
+<aside><div class="eyebrow">PROJECT LIBRARY</div><h1>模型資料庫</h1><p class="muted">瀏覽樓層，探索建築細節。</p><div class="section-label">樓層模型 <span id="count">—</span></div><nav id="models" aria-label="樓層模型"></nav><div class="sidebar-bottom"><span class="small-logo">◈</span><strong>所有資料留在本機</strong><p>使用本機 Viewer 與 SVF 資源，<br>無需 Autodesk 雲端連線。</p><div class="version">FORGE VIEWER <span>7.52.0</span></div></div></aside>
+<main><div class="toolbar"><div><div class="eyebrow">MODEL EXPLORER</div><h2 id="model-title">準備檢視器</h2></div><div class="actions"><button id="fit" disabled>⊞ 全模型視角</button><button id="reset" disabled>↺ 重設顯示</button></div></div><div class="searchbar"><form id="search-form"><label class="sr-only" for="search">搜尋構件名稱</label><input id="search" placeholder="搜尋構件名稱…" autocomplete="off"><button id="search-button" disabled>搜尋</button></form><span id="search-status" role="status">選取構件即可查看屬性</span></div><div class="viewport"><div id="viewer"></div><div id="loading" role="status"><div class="spinner"></div><strong id="loading-title">正在初始化檢視器</strong><span id="loading-detail">讀取本機資源…</span><button id="retry" hidden>重新載入</button></div><div class="viewport-label">3D WORKSPACE <span>·</span> LOCAL</div></div><footer><span id="status" role="status">啟動中</span><span>拖曳旋轉 · 滾輪縮放 · 中鍵平移</span></footer></main>
+</div>
+</body></html>
