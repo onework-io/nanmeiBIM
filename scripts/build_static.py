@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Build a portable static site from the bundled Viewer and SVF archives."""
+import hashlib
 import json
 import shutil
 import sys
@@ -16,6 +17,9 @@ def build():
     OUT.mkdir()
     shutil.copytree(ROOT / 'web', OUT / 'web')
     shutil.copyfile(ROOT / 'web/index.html', OUT / 'index.html')
+    index = OUT / 'index.html'
+    version = hashlib.sha256((OUT / 'web/app.js').read_bytes()).hexdigest()[:12]
+    index.write_text(index.read_text(encoding='utf-8').replace('./web/app.js', f'./web/app.js?v={version}'), encoding='utf-8')
     (OUT / 'web/index.html').unlink()
     shutil.copytree(ROOT / 'forge-viewer', OUT / 'forge-viewer')
     models = []
