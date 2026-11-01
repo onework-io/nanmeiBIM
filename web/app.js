@@ -40,7 +40,7 @@ function load(model) {
   $('retry').hidden = true;
   $('loading-title').textContent = `正在開啟 ${model.name}`;
   $('loading-detail').textContent = '載入幾何、材質與構件屬性…';
-  $('status').textContent = '讀取本機模型';
+  $('status').textContent = '讀取模型資源';
   $('model-title').textContent = model.name;
   $('search').value = '';
   $('search-status').textContent = '選取構件即可查看屬性';
@@ -50,16 +50,16 @@ function load(model) {
     button.setAttribute('aria-current', selected ? 'true' : 'false');
   });
   if (viewer.model) viewer.unloadModel(viewer.model);
-  viewer.loadModel(model.url, {}, () => {}, (code, message) => fail(`模型資源讀取失敗（${code}）。${message || '請確認 SVF 壓縮包包含完整相依檔案。'}`));
+  viewer.loadModel(new URL(model.url, document.baseURI).href, {}, () => {}, (code, message) => fail(`模型資源讀取失敗（${code}）。${message || '請確認 SVF 壓縮包包含完整相依檔案。'}`));
 }
 async function start() {
   try {
-    const response = await fetch('/api/models');
-    if (!response.ok) throw new Error('無法取得模型清單，請確認本機伺服器正在執行。');
+    const response = await fetch('./models.json');
+    if (!response.ok) throw new Error('無法取得模型清單，請確認網站已完整部署。');
     models = await response.json();
     renderModels();
     if (!models.length) throw new Error('BIM 資料夾中沒有可讀取的 .svfzip 模型。請加入包含 .svf 的完整模型包後重新整理。');
-    if (!window.Autodesk) throw new Error('本機 Viewer 套件未載入，請檢查 forge-viewer 資料夾。');
+    if (!window.Autodesk) throw new Error('Viewer 套件未載入，請檢查 forge-viewer 資料夾。');
     Autodesk.Viewing.Initializer({env: 'Local', offline: 'true', useADP: false, optOutTrackingByDefault: true, language: 'zh-HANT'}, () => {
       try {
         viewer = new Autodesk.Viewing.GuiViewer3D($('viewer'));
@@ -70,7 +70,7 @@ async function start() {
         viewer.addEventListener(Autodesk.Viewing.GEOMETRY_LOADED_EVENT, () => {
           busy = false;
           $('loading').hidden = true;
-          $('status').textContent = '● 模型已載入 · 本機資源';
+          $('status').textContent = '● 模型已載入 · 本站資源';
           controls(true);
           viewer.fitToView();
         });

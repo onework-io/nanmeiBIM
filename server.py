@@ -42,7 +42,7 @@ class Handler(SimpleHTTPRequestHandler):
     def serve(self, head):
         path = unquote(urlsplit(self.path).path)
         try:
-            if path == '/api/models':
+            if path in ('/api/models', '/models.json'):
                 return self.reply(json.dumps(catalog(), ensure_ascii=False).encode(), 'application/json; charset=utf-8', head)
             if path.startswith('/models/'):
                 parts = path.split('/', 3)

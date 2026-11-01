@@ -2,7 +2,17 @@
 
 使用現有 Autodesk Forge Viewer 7.52.0 與 `BIM/*.svfzip` 的本機網頁。無需 npm 套件、Autodesk 登入或 Access Token。Python 3.9 以上即可執行。
 
-## 啟動
+## 線上查看
+
+https://onework-io.github.io/nanmeiBIM/
+
+直接用支援 WebGL 的瀏覽器開啟，不需要 Python、Autodesk 帳號或 Token。網站及模型由 GitHub Pages 提供，初次載入需要網路。
+
+`main` 更新後，GitHub Actions 會執行 `scripts/build_static.py`，將 Viewer、介面及四個模型的靜態資源部署到 Pages。原始 ZIP 不會被修改，內附示範 HTML 不會發布。
+
+本機可執行 `python3 scripts/build_static.py` 產生 `dist/`，再用 `python3 -m http.server 8081 --directory dist` 預覽。
+
+## 本機離線啟動
 
 ```sh
 git clone https://github.com/onework-io/nanmeiBIM.git
@@ -33,6 +43,6 @@ python3 server.py
 - `web/`：繁體中文網頁介面。
 - `server.py`：標準函式庫 HTTP 伺服器與 ZIP 資源端點。
 
-伺服器預設僅綁定 `127.0.0.1`，供本機使用。SDK 採 `env: Local`、停用追蹤，HTTP Content Security Policy 限制網路資源為同源，不使用 CDN 或 Autodesk API。沒有雲端部署或上傳模型。首次載入也不需要外網。
+伺服器預設僅綁定 `127.0.0.1`，供本機使用。SDK 採 `env: Local`、停用追蹤，HTTP Content Security Policy 限制網路資源為同源，不使用 CDN 或 Autodesk API。此本機模式首次載入也不需要外網；線上版本由 GitHub Pages 託管公開模型。
 
 需要支援 WebGL 的瀏覽器；若無法顯示，檢查硬體加速、本機 SDK 檔案與模型包完整性。本機伺服器為開發與單機檢視用途。
