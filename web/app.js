@@ -73,6 +73,8 @@ async function start() {
           $('status').textContent = '● 模型已載入 · 本站資源';
           controls(true);
           viewer.fitToView();
+          const modelStructure = viewer.getExtension('Autodesk.ModelStructure');
+          if (modelStructure) modelStructure.activate();
         });
         viewer.addEventListener(Autodesk.Viewing.SELECTION_CHANGED_EVENT, event => {
           $('search-status').textContent = event.dbIdArray.length ? `已選取 ${event.dbIdArray.length} 個構件 · 可使用下方工具列查看屬性` : '選取構件即可查看屬性';
