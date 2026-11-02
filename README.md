@@ -1,6 +1,6 @@
 # 南美圖資 BIM 模型工作台
 
-使用現有 Autodesk Forge Viewer 7.52.0 與 `BIM/*.svfzip` 的本機網頁。無需 npm 套件、Autodesk 登入或 Access Token。Python 3.9 以上即可執行。
+使用現有 Autodesk Forge Viewer 7.52.0 與 BIM 模型的本機網頁。無需 npm 套件、Autodesk 登入或 Access Token。Python 3.9 以上即可執行。
 
 ## 線上查看
 
@@ -35,9 +35,7 @@ python3 server.py
 
 ## 加入模型
 
-將完整 `.svfzip` 放入 `BIM/` 後重新整理。伺服器自動搜尋壓縮包內的 `.svf` / `.f2d` 入口，保留檔案相對路徑並直接提供幾何、材質與屬性資源，不解壓、不更改原始模型。壓縮包內附的 HTML 不作為應用程式執行。
-
-此工具顯示已轉換的 SVF 資料，沒有提供原始 RVT / DWG / IFC 的轉檔服務。
+模型請給工一。
 
 ## 結構與離線行為
 
