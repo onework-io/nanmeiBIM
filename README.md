@@ -39,7 +39,6 @@ python3 server.py
 
 ## 結構與離線行為
 
-- `forge-viewer/`：原有 SDK，未修改。
 - `BIM/`：原有模型，未修改。
 - `web/`：繁體中文網頁介面。
 - `server.py`：標準函式庫 HTTP 伺服器與 ZIP 資源端點。
