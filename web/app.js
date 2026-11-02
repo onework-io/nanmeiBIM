@@ -1,8 +1,11 @@
 'use strict';
 const $ = id => document.getElementById(id);
 let viewer, models = [], active, busy = false, generation = 0;
+let ghostMode = false, modelReady = false;
 function controls(enabled) {
-  ['fit', 'reset', 'search-button'].forEach(id => $(id).disabled = !enabled);
+  modelReady = enabled;
+  ['fit', 'reset', 'search-button', 'restore', 'mode-hide', 'mode-ghost'].forEach(id => $(id).disabled = !enabled);
+  $('isolate').disabled = !enabled || !viewer?.getSelection().length;
   document.querySelectorAll('.model').forEach(button => button.disabled = busy);
 }
 function fail(message) {
@@ -43,6 +46,7 @@ function load(model) {
   $('status').textContent = '讀取模型資源';
   $('model-title').textContent = model.name;
   $('search').value = '';
+  $('isolation-status').textContent = '選取元件後可隔離顯示';
   $('search-status').textContent = '選取構件即可查看屬性';
   document.querySelectorAll('.model').forEach(button => {
     const selected = button.dataset.url === model.url;
@@ -71,12 +75,17 @@ async function start() {
           busy = false;
           $('loading').hidden = true;
           $('status').textContent = '● 模型已載入 · 本站資源';
+          viewer.setGhosting(ghostMode);
           controls(true);
           viewer.fitToView();
           const modelStructure = viewer.getExtension('Autodesk.ModelStructure');
           if (modelStructure) modelStructure.activate();
         });
+        viewer.addEventListener(Autodesk.Viewing.ISOLATE_EVENT, event => {
+          $('isolation-status').textContent = event.nodeIdArray?.length ? `隔離中 · 其他元件${ghostMode ? '半透明' : '完全隱藏'}` : '顯示全部元件';
+        });
         viewer.addEventListener(Autodesk.Viewing.SELECTION_CHANGED_EVENT, event => {
+          $('isolate').disabled = !modelReady || !event.dbIdArray.length;
           $('search-status').textContent = event.dbIdArray.length ? `已選取 ${event.dbIdArray.length} 個構件 · 可使用下方工具列查看屬性` : '選取構件即可查看屬性';
         });
         new ResizeObserver(() => viewer.resize()).observe($('viewer'));
@@ -85,6 +94,31 @@ async function start() {
     });
   } catch (error) { fail(error.message); }
 }
+function setIsolationMode(ghost) {
+  ghostMode = ghost;
+  viewer.setGhosting(ghost);
+  $('mode-hide').setAttribute('aria-pressed', String(!ghost));
+  $('mode-ghost').setAttribute('aria-pressed', String(ghost));
+  $('isolation-status').textContent = `其他元件：${ghost ? '半透明' : '完全隱藏'} · 隔離時套用`;
+}
+$('mode-hide').onclick = () => setIsolationMode(false);
+$('mode-ghost').onclick = () => setIsolationMode(true);
+$('isolate').onclick = () => {
+  const ids = viewer.getSelection();
+  if (!ids.length) return;
+  generation++;
+  viewer.setGhosting(ghostMode);
+  viewer.isolate(ids);
+  viewer.fitToView(ids);
+};
+$('restore').onclick = () => {
+  generation++;
+  viewer.showAll();
+  viewer.clearSelection();
+  viewer.fitToView();
+  $('search').value = '';
+  $('isolation-status').textContent = '已還原全部元件';
+};
 $('fit').onclick = () => viewer.fitToView();
 $('reset').onclick = () => {
   generation++;

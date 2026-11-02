@@ -20,6 +20,8 @@ def build():
     index = OUT / 'index.html'
     version = hashlib.sha256((OUT / 'web/app.js').read_bytes()).hexdigest()[:12]
     index.write_text(index.read_text(encoding='utf-8').replace('./web/app.js', f'./web/app.js?v={version}'), encoding='utf-8')
+    css_version = hashlib.sha256((OUT / 'web/style.css').read_bytes()).hexdigest()[:12]
+    index.write_text(index.read_text(encoding='utf-8').replace('./web/style.css', f'./web/style.css?v={css_version}'), encoding='utf-8')
     (OUT / 'web/index.html').unlink()
     shutil.copytree(ROOT / 'forge-viewer', OUT / 'forge-viewer')
     models = []
